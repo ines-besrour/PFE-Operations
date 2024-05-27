@@ -1,13 +1,18 @@
-import { Student} from 'src/Domains/student.schema';
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import mongoose, { HydratedDocument } from "mongoose";
+import { Student } from 'src/Domains/student.schema';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
 
-export type ficheDePropositionDocument = HydratedDocument<ficheDeProposition>;
+export type FicheDePropositionDocument = FicheDeProposition & Document;
+
+// export type ficheDePropositionDocument = HydratedDocument<ficheDeProposition>;
 @Schema()
-export class ficheDeProposition {
-
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Student'})
+export class FicheDeProposition {
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Student' })
   student: Student;
+
+  @Prop()
+  fileName: string;
 }
 
-export const ficheDePropositionSchema = SchemaFactory.createForClass(ficheDeProposition);
+export const FicheDePropositionSchema =
+  SchemaFactory.createForClass(FicheDeProposition);
