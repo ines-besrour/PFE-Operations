@@ -19,7 +19,7 @@ export class User {
   salt: string;
 
   @Prop({
-    type: 'enum',
+    type: String,
     enum: UserRoleEnum,
   })
   role: string;

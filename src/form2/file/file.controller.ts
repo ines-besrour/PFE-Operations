@@ -11,6 +11,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 import { FileService } from './file.service';
+import { Multer } from 'multer'; // Add this import statement
 
 @Controller('file')
 export class FileController {
@@ -47,7 +48,7 @@ export class FileController {
   @Post('upload/:studentId/:fileType')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile() file: Multer.File,
     @Param('studentId') studentId: string,
     @Param('fileType') fileType: string,
   ): Promise<{ fileName: string }> {

@@ -14,6 +14,7 @@ import { ConventionDocument } from '../../Domains/convention.schema';
 import { LettreAffectationDocument } from '../../Domains/LettreAffectation.schema';
 import { FicheDePropositionDocument } from '../../Domains/ficheDeProposition.schema';
 import { InjectModel } from '@nestjs/mongoose';
+import { Multer } from 'multer';
 
 @Injectable()
 export class FileService {
@@ -72,7 +73,7 @@ export class FileService {
   }
 
   async uploadFile(
-    file: Express.Multer.File,
+    file: Multer.File,
     studentId: string,
     fileType: string,
   ): Promise<string> {
