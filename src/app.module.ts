@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { PfeModule } from './pfe/pfe.module';
+import { PfeModule } from './formPfe/pfe.module';
 import { FileModule } from './form2/file/file.module';
 
 @Module({
