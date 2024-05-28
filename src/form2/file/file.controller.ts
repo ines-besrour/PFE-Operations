@@ -7,6 +7,7 @@ import {
   Param,
   Res,
   Delete,
+  NotFoundException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
@@ -60,17 +61,48 @@ export class FileController {
     return { fileName };
   }
 
-  @Get(':fileName')
-  async getFile(
-    @Param('fileName') fileName: string,
-    @Res() res: Response,
-  ): Promise<void> {
-    const file = await this.fileService.getFile(fileName);
-    res.send(file);
+  // @Get(':fileName')
+  // async getFile(
+  //   @Param('fileName') fileName: string,
+  //   @Res() res: Response,
+  // ): Promise<void> {
+  //   const file = await this.fileService.getFile(fileName);
+  //   res.send(file);
+  // }
+
+  // @Delete(':fileName')
+  // async deleteFile(@Param('fileName') fileName: string): Promise<void> {
+  //   await this.fileService.deleteFile(fileName);
+  // }
+  @Get(':studentId/:fileType')
+  async getFileByStudentId(
+    @Param('studentId') studentId: string,
+    @Param('fileType') fileType: string,
+  ): Promise<Buffer> {
+    try {
+      const fileData = await this.fileService.getFileByStudentId(
+        studentId,
+        fileType,
+      );
+      return fileData;
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
   }
 
-  @Delete(':fileName')
-  async deleteFile(@Param('fileName') fileName: string): Promise<void> {
-    await this.fileService.deleteFile(fileName);
+  @Delete(':studentId/:fileType')
+  async deleteFileByStudentId(
+    @Param('studentId') studentId: string,
+    @Param('fileType') fileType: string,
+  ): Promise<{ message: string }> {
+    try {
+      const result = await this.fileService.deleteFileByStudentId(
+        studentId,
+        fileType,
+      );
+      return result;
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
   }
 }

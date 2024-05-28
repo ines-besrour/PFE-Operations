@@ -18,47 +18,16 @@ import { Multer } from 'multer';
 
 @Injectable()
 export class FileService {
-  private readonly uploadPath = join(
-    __dirname,
-    '..',
-    '..',
-    '..',
-    'src',
-    'form2',
-    'uploads',
-  );
-  // constructor() {
-  //   if (!existsSync(this.uploadPath)) {
-  //     mkdirSync(this.uploadPath, { recursive: true });
-  //   }
-  // }
-  //
-  // async uploadFile(file: Express.Multer.File): Promise<string> {
-  //   const fileName = `${uuidv4()}-${file.originalname}`;
-  //   const filePath = join(this.uploadPath, fileName);
-  //   writeFileSync(filePath, file.buffer);
-  //   return fileName;
-  // }
-  //
-  // async getFile(fileName: string): Promise<Buffer> {
-  //   const filePath = join(this.uploadPath, fileName);
-  //   if (!existsSync(filePath)) {
-  //     throw new NotFoundException('File not found');
-  //   }
-  //   return readFileSync(filePath);
-  // }
-  //
-  // async deleteFile(fileName: string): Promise<void> {
-  //   const filePath = join(this.uploadPath, fileName);
-  //   if (!existsSync(filePath)) {
-  //     throw new NotFoundException('File not found');
-  //   }
-  //   unlinkSync(filePath);
-  // }
-  //
-  // async getAllFiles(): Promise<string[]> {
-  //   return readdirSync(this.uploadPath);
-  // }
+  // private readonly uploadPath = join(
+  //   __dirname,
+  //   '..',
+  //   '..',
+  //   '..',
+  //   'src',
+  //   'form2',
+  //   'uploads',
+  // );
+
   constructor(
     @InjectModel('Convention')
     private readonly conventionModel: Model<ConventionDocument>,
@@ -67,9 +36,8 @@ export class FileService {
     @InjectModel('FicheDeProposition')
     private readonly ficheDePropositionModel: Model<FicheDePropositionDocument>,
   ) {
-    if (!existsSync(this.uploadPath)) {
-      mkdirSync(this.uploadPath, { recursive: true });
-    }
+    // if (!existsSync(this.uploadPath)) {
+    //   mkdirSync(this.uploadPath, { recursive: true });
   }
 
   async uploadFile(
@@ -78,8 +46,9 @@ export class FileService {
     fileType: string,
   ): Promise<string> {
     const fileName = `${uuidv4()}-${file.originalname}`;
-    const filePath = join(this.uploadPath, fileName);
-    writeFileSync(filePath, file.buffer);
+
+    // const filePath = join(this.uploadPath, fileName);
+    // writeFileSync(filePath, file.buffer);
 
     switch (fileType) {
       case 'convention':
@@ -107,19 +76,81 @@ export class FileService {
     return fileName;
   }
 
-  async getFile(fileName: string): Promise<Buffer> {
-    const filePath = join(this.uploadPath, fileName);
-    if (!existsSync(filePath)) {
+  // async getFile(fileName: string): Promise<Buffer> {
+  //   const filePath = join(this.uploadPath, fileName);
+  //   if (!existsSync(filePath)) {
+  //     throw new NotFoundException('File not found');
+  //   }
+  //   return readFileSync(filePath);
+  // }
+
+  // async deleteFile(fileName: string): Promise<void> {
+  //   const filePath = join(this.uploadPath, fileName);
+  //   if (!existsSync(filePath)) {
+  //     throw new NotFoundException('File not found');
+  //   }
+  //   unlinkSync(filePath);
+  // }
+  async getFileByStudentId(studentId: string, fileType: string): Promise<any> {
+    let fileData: any;
+
+    switch (fileType) {
+      case 'convention':
+        fileData = await this.conventionModel
+          .findOne({ student: studentId })
+          .exec();
+        break;
+      case 'lettreAffectation':
+        fileData = await this.lettreAffectationModel
+          .findOne({ student: studentId })
+          .exec();
+        break;
+      case 'ficheDeProposition':
+        fileData = await this.ficheDePropositionModel
+          .findOne({ student: studentId })
+          .exec();
+        break;
+      default:
+        throw new NotFoundException('Invalid file type');
+    }
+
+    if (!fileData) {
       throw new NotFoundException('File not found');
     }
-    return readFileSync(filePath);
+
+    return fileData; // Return the entire file data
   }
 
-  async deleteFile(fileName: string): Promise<void> {
-    const filePath = join(this.uploadPath, fileName);
-    if (!existsSync(filePath)) {
+  async deleteFileByStudentId(
+    studentId: string,
+    fileType: string,
+  ): Promise<{ message: string }> {
+    let result;
+
+    switch (fileType) {
+      case 'convention':
+        result = await this.conventionModel
+          .findOneAndDelete({ student: studentId })
+          .exec();
+        break;
+      case 'lettreAffectation':
+        result = await this.lettreAffectationModel
+          .findOneAndDelete({ student: studentId })
+          .exec();
+        break;
+      case 'ficheDeProposition':
+        result = await this.ficheDePropositionModel
+          .findOneAndDelete({ student: studentId })
+          .exec();
+        break;
+      default:
+        throw new NotFoundException('Invalid file type');
+    }
+
+    if (!result) {
       throw new NotFoundException('File not found');
     }
-    unlinkSync(filePath);
+
+    return { message: 'File deleted successfully' };
   }
 }
