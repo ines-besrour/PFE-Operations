@@ -4,7 +4,8 @@ import { Student } from "./student.schema";
 import { Entreprise } from "./entreprise.schema";
 
 export type PFEDocument = HydratedDocument<PFE>;
-@Schema()
+
+@Schema({ collection: 'pfe' })
 export class PFE {
   @Prop()
   sujet: string;
@@ -19,9 +20,9 @@ export class PFE {
   sessionDeSoutenance: string;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Student'})
-  student: Student;
+  student: mongoose.Types.ObjectId ;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Entreprise' })
-  entreprise: mongoose.Types.ObjectId | Entreprise;
+  entreprise: mongoose.Types.ObjectId ;
 }
 export const PFESchema = SchemaFactory.createForClass(PFE);
