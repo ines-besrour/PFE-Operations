@@ -1,7 +1,5 @@
 import { IsString, IsDate, IsMongoId } from 'class-validator';
 import mongoose from 'mongoose';
-import { Entreprise } from 'src/Domains/entreprise.schema';
-import { Student } from 'src/Domains/student.schema';
 
 export class CreatePfeDto {
   @IsString()
@@ -17,9 +15,8 @@ export class CreatePfeDto {
   sessionDeSoutenance: string;
 
   @IsMongoId()
-  student:  mongoose.Types.ObjectId ;
+  student: mongoose.Types.ObjectId;
 
   @IsMongoId()
-  entreprise:  mongoose.Types.ObjectId ;
+  entreprise: mongoose.Types.ObjectId;
 }
-

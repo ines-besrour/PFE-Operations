@@ -76,21 +76,6 @@ export class FileService {
     return fileName;
   }
 
-  // async getFile(fileName: string): Promise<Buffer> {
-  //   const filePath = join(this.uploadPath, fileName);
-  //   if (!existsSync(filePath)) {
-  //     throw new NotFoundException('File not found');
-  //   }
-  //   return readFileSync(filePath);
-  // }
-
-  // async deleteFile(fileName: string): Promise<void> {
-  //   const filePath = join(this.uploadPath, fileName);
-  //   if (!existsSync(filePath)) {
-  //     throw new NotFoundException('File not found');
-  //   }
-  //   unlinkSync(filePath);
-  // }
   async getFileByStudentId(studentId: string, fileType: string): Promise<any> {
     let fileData: any;
 

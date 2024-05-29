@@ -1,4 +1,4 @@
-import { Student } from 'src/Domains/student.schema';
+import { Student } from './student.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 

@@ -14,63 +14,26 @@ import { Response } from 'express';
 import { FileService } from './file.service';
 import { Express } from 'express';
 
-
 @Controller('file')
 export class FileController {
   constructor(private readonly fileService: FileService) {}
-  //
-  // @Post('upload')
-  // @UseInterceptors(FileInterceptor('file'))
-  // async uploadFile(
-  //   @UploadedFile() file: Express.Multer.File,
-  // ): Promise<{ fileName: string }> {
-  //   const fileName = await this.fileService.uploadFile(file);
-  //   return { fileName };
-  // }
-  //
-  // @Get(':fileName')
-  // async getFile(
-  //   @Param('fileName') fileName: string,
-  //   @Res() res: Response,
-  // ): Promise<void> {
-  //   const file = await this.fileService.getFile(fileName);
-  //   res.send(file);
-  // }
-  //
-  // @Delete(':fileName')
-  // async deleteFile(@Param('fileName') fileName: string): Promise<void> {
-  //   await this.fileService.deleteFile(fileName);
-  // }
-  //
-  // @Get()
-  // async getAllFiles(): Promise<string[]> {
-  //   return this.fileService.getAllFiles();
-  // }
 
   @Post('upload/:studentId/:fileType')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(
-    @UploadedFile() file: Express.Multer.File,  // Using the correct type for file
+    @UploadedFile() file: Express.Multer.File, // Using the correct type for file
 
     @Param('studentId') studentId: string,
     @Param('fileType') fileType: string,
   ): Promise<{ fileName: string }> {
-    const fileName = await this.fileService.uploadFile(file, studentId, fileType);
+    const fileName = await this.fileService.uploadFile(
+      file,
+      studentId,
+      fileType,
+    );
     return { fileName };
   }
-  // @Get(':fileName')
-  // async getFile(
-  //   @Param('fileName') fileName: string,
-  //   @Res() res: Response,
-  // ): Promise<void> {
-  //   const file = await this.fileService.getFile(fileName);
-  //   res.send(file);
-  // }
 
-  // @Delete(':fileName')
-  // async deleteFile(@Param('fileName') fileName: string): Promise<void> {
-  //   await this.fileService.deleteFile(fileName);
-  // }
   @Get(':studentId/:fileType')
   async getFileByStudentId(
     @Param('studentId') studentId: string,
