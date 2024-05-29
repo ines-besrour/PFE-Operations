@@ -5,7 +5,7 @@ import { pfeController } from './pfe.controller';
 import { pfeService } from './pfe.service';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: PFE.name, schema: PFESchema }])],
+  imports: [MongooseModule.forFeature([{ name: PFE.name, schema: PFESchema }])],  
   controllers: [pfeController],
   providers: [pfeService],
 })

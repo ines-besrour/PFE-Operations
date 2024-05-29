@@ -39,9 +39,9 @@ export class FileService {
     // if (!existsSync(this.uploadPath)) {
     //   mkdirSync(this.uploadPath, { recursive: true });
   }
-
   async uploadFile(
-    file: Multer.File,
+
+    file: Express.Multer.File,
     studentId: string,
     fileType: string,
   ): Promise<string> {

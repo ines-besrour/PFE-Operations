@@ -1,85 +1,75 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { getModelToken } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { pfeService } from './pfe.service';
+import { pfeController } from './pfe.controller';
 import { PFE } from '../Domains/pfe.schema';
+import { CreatePfeDto } from './create-pfe.dto';
+import mongoose from 'mongoose';
 
-const mockPFE = {
+const mockPFE: CreatePfeDto = {
   sujet: 'Sample Sujet',
   dateDebut: new Date(),
   dateFin: new Date(),
   sessionDeSoutenance: '2024-06',
-  student: '60d0fe4f5311236168a109ca',
-  entreprise: '60d0fe4f5311236168a109cb',
+  student: new mongoose.Types.ObjectId('60d0fe4f5311236168a109ca'),
+  entreprise: new mongoose.Types.ObjectId('60d0fe4f5311236168a109cb'),
 };
 
-describe('pfeService', () => {
+describe('pfeController', () => {
+  let controller: pfeController;
   let service: pfeService;
-  let model: Model<PFE>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      controllers: [pfeController],
       providers: [
-        pfeService,
         {
-          provide: getModelToken(PFE.name),
+          provide: pfeService,
           useValue: {
-            new: jest.fn().mockResolvedValue(mockPFE),
-            constructor: jest.fn().mockResolvedValue(mockPFE),
-            find: jest.fn(),
-            findById: jest.fn(),
-            findByIdAndUpdate: jest.fn(),
-            findByIdAndRemove: jest.fn(),
             create: jest.fn().mockResolvedValue(mockPFE),
-            exec: jest.fn(),
+            findAll: jest.fn().mockResolvedValue([mockPFE]),
+            findOne: jest.fn().mockResolvedValue(mockPFE),
+            update: jest.fn().mockResolvedValue(mockPFE),
+            remove: jest.fn().mockResolvedValue(mockPFE),
           },
         },
       ],
     }).compile();
 
+    controller = module.get<pfeController>(pfeController);
     service = module.get<pfeService>(pfeService);
-    model = module.get<Model<PFE>>(getModelToken(PFE.name));
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(controller).toBeDefined();
   });
 
   it('should create a new PFE', async () => {
-    jest.spyOn(model, 'create').mockResolvedValueOnce(mockPFE as any);
-    const createdPFE = await service.create(mockPFE);
-    expect(createdPFE).toEqual(mockPFE);
+    const result = await controller.create(mockPFE);
+    expect(result).toEqual(mockPFE);
+    expect(service.create).toHaveBeenCalledWith(mockPFE);
   });
 
   it('should return all PFEs', async () => {
-    jest.spyOn(model, 'find').mockReturnValue({
-      exec: jest.fn().mockResolvedValueOnce([mockPFE]),
-    } as any);
-    const pfes = await service.findAll();
-    expect(pfes).toEqual([mockPFE]);
+    const result = await controller.findAll();
+    expect(result).toEqual([mockPFE]);
+    expect(service.findAll).toHaveBeenCalled();
   });
 
   it('should return a PFE by ID', async () => {
-    jest.spyOn(model, 'findById').mockReturnValueOnce({
-      exec: jest.fn().mockResolvedValueOnce(mockPFE),
-    } as any);
-    const pfe = await service.findOne('someId');
-    expect(pfe).toEqual(mockPFE);
+    const result = await controller.findOne('someId');
+    expect(result).toEqual(mockPFE);
+    expect(service.findOne).toHaveBeenCalledWith('someId');
   });
 
   it('should update a PFE by ID', async () => {
-    jest.spyOn(model, 'findByIdAndUpdate').mockReturnValueOnce({
-      exec: jest.fn().mockResolvedValueOnce(mockPFE),
-    } as any);
-    const updatedPFE = await service.update('someId', mockPFE);
-    expect(updatedPFE).toEqual(mockPFE);
+    const result = await controller.update('someId', mockPFE);
+    expect(result).toEqual(mockPFE);
+    expect(service.update).toHaveBeenCalledWith('someId', mockPFE);
   });
 
   it('should delete a PFE by ID', async () => {
-    jest.spyOn(model, 'findByIdAndRemove').mockReturnValueOnce({
-      exec: jest.fn().mockResolvedValueOnce(mockPFE),
-    } as any);
-    const deletedPFE = await service.remove('someId');
-    expect(deletedPFE).toEqual(mockPFE);
+    const result = await controller.remove('someId');
+    expect(result).toEqual(mockPFE);
+    expect(service.remove).toHaveBeenCalledWith('someId');
   });
 });

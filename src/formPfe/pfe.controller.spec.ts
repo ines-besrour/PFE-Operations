@@ -2,14 +2,15 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { pfeService } from './pfe.service';
 import { pfeController } from './pfe.controller';
 import { PFE } from '../Domains/pfe.schema';
+import mongoose from 'mongoose';
 
 const mockPFE = {
   sujet: 'Sample Sujet',
   dateDebut: new Date(),
   dateFin: new Date(),
   sessionDeSoutenance: '2024-06',
-  student: '60d0fe4f5311236168a109ca',
-  entreprise: '60d0fe4f5311236168a109cb',
+  student: new mongoose.Types.ObjectId('60d0fe4f5311236168a109ca'),
+  entreprise: new mongoose.Types.ObjectId('60d0fe4f5311236168a109cb'),
 };
 
 describe('pfeController', () => {
