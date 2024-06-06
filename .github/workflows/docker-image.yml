@@ -24,3 +24,6 @@ jobs:
         
       - name: Push Docker image to Docker Hub
         run: docker push inesbes/pfeoperations:latest
+
+      - name: Run tests
+        run: npm test
