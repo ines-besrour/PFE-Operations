@@ -1,5 +1,4 @@
 version: '3.8'
-
 services:
   app:
     build: 
@@ -20,5 +19,15 @@ services:
     volumes:
       - mongo-data:/data/db
 
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_LABEL_ENABLE=true
+      - WATCHTOWER_POLL_INTERVAL=30  # Check for updates every 30 seconds
 volumes:
   mongo-data:
